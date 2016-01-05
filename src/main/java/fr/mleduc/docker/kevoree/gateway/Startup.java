@@ -14,8 +14,12 @@ import java.net.UnknownHostException;
  */
 public class Startup {
     public static void main(String[] args) throws UnknownHostException {
-        final KContentDeliveryDriver cdn = new MongoDbContentDeliveryDriver("localhost", 27017, System.getenv("DATABASE"));
-        WebSocketGateway wsGateway = WebSocketGateway.expose(cdn, 8888);
-        wsGateway.start();
+        final KContentDeliveryDriver cdn = new MongoDbContentDeliveryDriver("localhost", 27017, "test");
+        cdn.connect(new KCallback<Throwable>() {
+            public void on(Throwable throwable) {
+                WebSocketGateway wsGateway = WebSocketGateway.expose(cdn, 8888);
+                wsGateway.start();
+            }
+        });
     }
 }
