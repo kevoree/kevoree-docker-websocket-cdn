@@ -13,18 +13,9 @@ import java.net.UnknownHostException;
  * Created by mleduc on 04/01/16.
  */
 public class Startup {
-    public static void main(String[] args) {
-        try {
-            final KContentDeliveryDriver cdn = new MongoDbContentDeliveryDriver("mongo", 27017, System.getenv("DATABASE"));
-            final KevoreeModel dynamicMM = new KevoreeModel(DataManagerBuilder.create().withContentDeliveryDriver(cdn).build());
-            dynamicMM.connect(new KCallback() {
-                public void on(Object o) {
-                    WebSocketGateway wsGateway = WebSocketGateway.expose(cdn, 8888);
-                    wsGateway.start();
-                }
-            });
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
+    public static void main(String[] args) throws UnknownHostException {
+        final KContentDeliveryDriver cdn = new MongoDbContentDeliveryDriver("localhost", 27017, System.getenv("DATABASE"));
+        WebSocketGateway wsGateway = WebSocketGateway.expose(cdn, 8888);
+        wsGateway.start();
     }
 }
